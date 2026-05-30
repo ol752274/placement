@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -52,17 +52,19 @@ export default function Jobs() {
   const [search, setSearch] = useState('');
   const [type, setType] = useState('All');
   const [location, setLocation] = useState('');
+  const [appliedSearch, setAppliedSearch] = useState('');
+  const [appliedLocation, setAppliedLocation] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
 
-  const fetchJobs = async () => {
+  const fetchJobs = useCallback(async () => {
     setLoading(true);
     try {
       const params = { page, limit: 9 };
-      if (search) params.search = search;
+      if (appliedSearch) params.search = appliedSearch;
       if (type !== 'All') params.type = type;
-      if (location) params.location = location;
+      if (appliedLocation) params.location = appliedLocation;
 
       const res = await axios.get('/api/jobs', { params });
       setJobs(res.data.jobs);
@@ -73,16 +75,17 @@ export default function Jobs() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [appliedLocation, appliedSearch, page, type]);
 
   useEffect(() => {
     fetchJobs();
-  }, [page, type]);
+  }, [fetchJobs]);
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setAppliedSearch(search);
+    setAppliedLocation(location);
     setPage(1);
-    fetchJobs();
   };
 
   return (

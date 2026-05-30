@@ -16,7 +16,7 @@ function AISection({ title, icon, children }) {
 }
 
 export default function AITools() {
-  const { user } = useAuth();
+  const { token } = useAuth();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('resume');
   const [profile, setProfile] = useState(null);
@@ -42,12 +42,20 @@ export default function AITools() {
   const [jmJobDesc, setJmJobDesc] = useState('');
 
   useEffect(() => {
-    axios.get('/api/profile').then((res) => {
-      setProfile(res.data);
-      if (res.data.profile?.resumeText) setResumeText(res.data.profile.resumeText);
-    });
+    if (token) {
+      axios.get('/api/profile')
+        .then((res) => {
+          setProfile(res.data);
+          if (res.data.profile?.resumeText) setResumeText(res.data.profile.resumeText);
+        })
+        .catch(() => {
+          setProfile(null);
+        });
+    } else {
+      setProfile(null);
+    }
     if (searchParams.get('job')) setActiveTab('match');
-  }, []);
+  }, [searchParams, token]);
 
   const call = async (endpoint, payload, field) => {
     setLoading(true); setResult('');

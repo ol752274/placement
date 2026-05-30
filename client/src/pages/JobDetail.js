@@ -24,7 +24,7 @@ export default function JobDetail() {
       })
       .catch(() => navigate('/jobs'))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, navigate, user]);
 
   const handleApply = async () => {
     if (!user) return navigate('/login');

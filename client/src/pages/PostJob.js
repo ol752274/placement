@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
 export default function PostJob() {
@@ -34,7 +34,7 @@ export default function PostJob() {
         skills: form.skills.split(',').map((s) => s.trim()).filter(Boolean),
         requirements: form.requirements.split('\n').map((r) => r.trim()).filter(Boolean),
       };
-      const res = await axios.post('/api/jobs', payload);
+      const res = await api.post('/api/jobs', payload);
       navigate(`/jobs/${res.data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to post job');
