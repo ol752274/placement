@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
 export default function JobDetail() {
@@ -15,7 +15,7 @@ export default function JobDetail() {
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
-    axios.get(`/api/jobs/${id}`)
+    api.get(`/api/jobs/${id}`)
       .then((res) => {
         setJob(res.data);
         if (user) {
@@ -30,7 +30,7 @@ export default function JobDetail() {
     if (!user) return navigate('/login');
     setApplying(true);
     try {
-      await axios.post(`/api/jobs/${id}/apply`);
+      await api.post(`/api/jobs/${id}/apply`);
       setApplied(true);
       setMsg('Application submitted! 🎉');
     } catch (err) {
@@ -43,7 +43,7 @@ export default function JobDetail() {
   const handleSave = async () => {
     if (!user) return navigate('/login');
     try {
-      const res = await axios.post(`/api/jobs/${id}/save`);
+      const res = await api.post(`/api/jobs/${id}/save`);
       setSaved(res.data.saved);
       setMsg(res.data.message);
     } catch (err) {

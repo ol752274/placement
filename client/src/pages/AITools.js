@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
 function AISection({ title, icon, children }) {
@@ -43,7 +43,7 @@ export default function AITools() {
 
   useEffect(() => {
     if (token) {
-      axios.get('/api/profile')
+      api.get('/api/profile')
         .then((res) => {
           setProfile(res.data);
           if (res.data.profile?.resumeText) setResumeText(res.data.profile.resumeText);
@@ -60,7 +60,7 @@ export default function AITools() {
   const call = async (endpoint, payload, field) => {
     setLoading(true); setResult('');
     try {
-      const res = await axios.post(`/api/ai/${endpoint}`, payload);
+      const res = await api.post(`/api/ai/${endpoint}`, payload);
       setResult(res.data[field]);
     } catch (err) {
       setResult('❌ Error: ' + (err.response?.data?.message || err.message));

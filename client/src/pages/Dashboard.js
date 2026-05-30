@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
 function StatCard({ icon, label, value, color }) {
@@ -73,14 +73,14 @@ function EmployerDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/jobs/employer/mine')
+    api.get('/api/jobs/employer/mine')
       .then((res) => setJobs(res.data))
       .finally(() => setLoading(false));
   }, []);
 
   const deleteJob = async (id) => {
     if (!window.confirm('Delete this job?')) return;
-    await axios.delete(`/api/jobs/${id}`);
+    await api.delete(`/api/jobs/${id}`);
     setJobs(jobs.filter((j) => j._id !== id));
   };
 
@@ -134,7 +134,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user?.role === 'student') {
-      axios.get('/api/profile')
+      api.get('/api/profile')
         .then((res) => setProfile(res.data))
         .finally(() => setLoading(false));
     } else {

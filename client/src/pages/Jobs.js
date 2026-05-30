@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 
 const JOB_TYPES = ['All', 'Full-time', 'Part-time', 'Internship', 'Contract', 'Remote'];
 
@@ -66,7 +66,7 @@ export default function Jobs() {
       if (type !== 'All') params.type = type;
       if (appliedLocation) params.location = appliedLocation;
 
-      const res = await axios.get('/api/jobs', { params });
+      const res = await api.get('/api/jobs', { params });
       setJobs(res.data.jobs);
       setTotalPages(res.data.pages);
       setTotal(res.data.total);

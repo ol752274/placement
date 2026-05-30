@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
 export default function Profile() {
@@ -13,7 +13,7 @@ export default function Profile() {
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
-    axios.get('/api/profile').then((res) => {
+    api.get('/api/profile').then((res) => {
       const u = res.data;
       setForm({
         name: u.name || '',
@@ -42,7 +42,7 @@ export default function Profile() {
           skills: form.profile.skills.split(',').map((s) => s.trim()).filter(Boolean),
         },
       };
-      await axios.put('/api/profile', payload);
+      await api.put('/api/profile', payload);
       setMsg('Profile saved! ✓');
     } catch (err) {
       setMsg('Failed to save: ' + (err.response?.data?.message || err.message));
